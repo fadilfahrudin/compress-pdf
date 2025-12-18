@@ -1,9 +1,15 @@
 import fs from "node:fs";
 import path from "node:path";
 import { compressPdfByType } from "../services/PDFCompressService.js";
+import { validatePdfSignature } from "../utils/validatePdfSigniture.js";
 
 export async function compressController(req, res) {
     if (!req.file) return res.status(400).send("File is required");
+
+    if (!validatePdfSignature(req.file.path)) {
+        fs.unlinkSync(req.file.path);
+        return res.status(400).send("Invalid PDF file");
+    }
 
     const type = req.query.type || "md"; // xs | md | lg
 
