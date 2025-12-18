@@ -10,19 +10,20 @@ import Loading from './components/loading';
 const { Dragger } = Upload;
 
 type CompressStatus = "success" | "failed" | "idle";
+type ProgressStatus = "compressing" | "finished" | "done"; 
 
 function App() {
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [file, setFile] = useState<File | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [isFinished, setIsFinished] = useState<boolean | null>(null);
+  const [isProgress, setIsProgress] = useState<boolean>(false);
+  const [progressStatus, setProgressStatus] = useState<ProgressStatus>("done");
   const [type, setType] = useState('md');
   const [compressStatus, setCompressStatus] = useState<CompressStatus>('idle');
 
   const uploadHandler = async () => {
     if (!file) return alert("Please select a file first!");
-    setLoading(true);
-    setIsFinished(false)
+    setIsProgress(true);
+    setProgressStatus("compressing");
 
     const formData = new FormData();
     formData.append("file", file);
@@ -38,50 +39,59 @@ function App() {
       const url = window.URL.createObjectURL(new Blob([response.data]));
       setCompressStatus("success");
 
+      // Create and click the download link
       const link = document.createElement('a');
       link.href = url;
       link.setAttribute('download', `compressed-${file.name}`);
       document.body.appendChild(link);
-      setIsFinished(true);
       link.click();
       link.remove();
+
+      // Change status
+      setProgressStatus("finished");
       setTimeout(() => {
-        setIsFinished(null);
+        setProgressStatus("done");
       }, 1600);
     } catch (error) {
       console.error("Error uploading file:", error);
+      setProgressStatus("finished");
       setCompressStatus("failed");
+      setTimeout(() => {
+        setProgressStatus("done");
+      }, 1600);
     } finally {
       setTimeout(() => {
-        setLoading(false);
+        setIsProgress(false);
       }, 2200);
       setFileList([]);
       setFile(null);
     }
   }
 
+  
+
   return (
     <motion.div
-      animate={{ height: loading ? 200 : "" }}
+      animate={{ height: isProgress ? 200 : "" }}
       transition={{ type: 'spring', mass: 1 }}
       className="container">
       <AnimatePresence mode="wait">
-        {(loading) && (
+        {(isProgress) && (
           <motion.div
             initial={{ scaleY: 0 }}
-            animate={{ scaleY: 1 }}
+            animate={{ scaleY: 1,  }}
             exit={{ scaleY: 0 }}
             transition={{ duration: 0.5, type: "spring", damping: 20 }}
             className="layer-on-compress"
           >
             <AnimatePresence mode="wait">
-              {isFinished === false && (
+              {progressStatus === "compressing" && (
                 <motion.span
                   key="loading"
                   initial={{ opacity: 0, y: 40 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -40 }}
-                  transition={{ duration: 0.4, delay: 0.5 }}
+                  transition={{ duration: 0.4, delay: 0.3 }}
                   className='compress-status'
                 >
                   Compressing
@@ -89,7 +99,7 @@ function App() {
                 </motion.span>
               )}
 
-              {isFinished === true && (
+              {progressStatus === "finished" && (
                 <motion.span
                   key="complete"
                   initial={{ opacity: 0, y: 40 }}
