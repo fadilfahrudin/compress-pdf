@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import { compressPdfByType } from "../services/PDFCompressService.js";
+import { compressPdfByType } from "../services/index.js";
 import { validatePdfSignature } from "../utils/validatePdfSigniture.js";
 
 export async function compressController(req, res) {

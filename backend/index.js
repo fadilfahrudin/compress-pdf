@@ -4,7 +4,7 @@ import { compressController } from "./controllers/compressControler.js";
 import { uploadPdf } from "./middlewares/multer.js";
 
 const app = express();
-const port = 3000;
+const port = 8000;
 
 app.use(cors());
 
