@@ -10,7 +10,7 @@ import Loading from './components/loading';
 const { Dragger } = Upload;
 
 type CompressStatus = "success" | "failed" | "idle";
-type ProgressStatus = "compressing" | "finished" | "done"; 
+type ProgressStatus = "compressing" | "finished" | "done";
 
 function App() {
   const [fileList, setFileList] = useState<UploadFile[]>([]);
@@ -29,7 +29,7 @@ function App() {
     formData.append("file", file);
 
     try {
-      const response = await axios.post(`http://localhost:3000/compress?type=${type}`, formData, {
+      const response = await axios.post(`http://localhost:8000/compress?type=${type}`, formData, {
         responseType: 'blob',
         headers: {
           'Content-Type': 'multipart/form-data'
@@ -68,7 +68,7 @@ function App() {
     }
   }
 
-  
+
 
   return (
     <motion.div
@@ -79,7 +79,7 @@ function App() {
         {(isProgress) && (
           <motion.div
             initial={{ scaleY: 0 }}
-            animate={{ scaleY: 1,  }}
+            animate={{ scaleY: 1, }}
             exit={{ scaleY: 0 }}
             transition={{ duration: 0.5, type: "spring", damping: 20 }}
             className="layer-on-compress"

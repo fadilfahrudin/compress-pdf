@@ -9,13 +9,13 @@ export async function pdfToImgCompress(
     outputPath
 ) {
     const quality = 50;
-    const scale = 0.5;
+    const scale = 1;
     const TEMP_ROOT = path.join(process.cwd(), "temp_pdf");
     const tempDir = path.join(TEMP_ROOT, Date.now().toString());
 
     console.log("📌 XS Compression started");
     fs.mkdirSync(tempDir, { recursive: true });
-    
+
     // 1️⃣ PDF → IMG (Ghostscript)
     await pdfToImages(inputPath, tempDir, 300);
 

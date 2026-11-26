@@ -1,8 +1,10 @@
 import { execAsync } from "../utils/exeGhostScript.js";
 
 export async function ghostScriptCompress(inputPath, outputPath, quality) {
-    console.log(process.platform, ": process.platform")
-    const gs = process.platform === "win32" ? "gswin64c" : "/usr/local/bin/gs";
+    const gs = process.platform === "win32"
+        ? "gswin64c"
+        : "gs";
+
     const preset = quality === "md" ? "ebook" : "printer";
 
     const cmd = `${gs} -q -dNOPAUSE -dBATCH -dSAFER \
