@@ -17,9 +17,12 @@
     "node-poppler": "^9.0.1",
     "pdf-lib": "^1.17.1",
     "pdf-poppler": "^0.2.3",
-    "sharp": "^0.34.5"
+    "sharp": "^0.35.5"
   },
   "devDependencies": {
     "nodemon": "^3.1.11"
+  },
+  "allowScripts": {
+    "fsevents@2.3.3": true
   }
 }
